@@ -45,6 +45,24 @@ def main():
         help="Path to the input file (.txt or .json)"
     )
     parser.add_argument(
+        "--json-text-field",
+        type=str,
+        default="text",
+        help="Name of the field containing the text in the JSON input (default: text)"
+    )
+    parser.add_argument(
+        "--json-embedding-field",
+        type=str,
+        default="embedding",
+        help="Name of the field containing the embedding in the JSON input (default: embedding)"
+    )
+    parser.add_argument(
+        "--json-label-field",
+        type=str,
+        default="label",
+        help="Name of the field containing the label in the JSON input (default: label)"
+    )
+    parser.add_argument(
         "-o", "--output",
         type=Path,
         help="Path to the output HTML file (default: derived from input filename)"
@@ -102,13 +120,13 @@ def main():
                     print("Warning: Skipping non-dictionary item in JSON list.")
                     continue
 
-                text = item.get("text")
+                text = item.get(args.json_text_field)
                 if not text or not isinstance(text, str):
-                    print("Warning: Skipping item with missing or invalid 'text' field.")
+                    print(f"Warning: Skipping item with missing or invalid '{args.json_text_field}' field.")
                     continue
 
-                embedding = item.get("embedding")
-                label = item.get("label", DEFAULT_LABEL) # Use default if label is missing
+                embedding = item.get(args.json_embedding_field)
+                label = item.get(args.json_label_field, DEFAULT_LABEL) # Use default if label is missing
 
                 if embedding and is_valid_embedding(embedding):
                     print(f"Using provided embedding for '{text[:30]}...'")
