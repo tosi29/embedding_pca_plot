@@ -1,4 +1,5 @@
 from google import genai
+from google.genai import types
 import plotly.express as px
 from sklearn.decomposition import PCA
 import numpy as np
@@ -20,6 +21,7 @@ for text in texts:
         result = client.models.embed_content(
             model="gemini-embedding-exp-03-07",
             contents=text,
+            config=types.EmbedContentConfig(task_type="CLUSTERING"),
         )
         time.sleep(10) # APIのレート制限を避けるために10秒待機
         embeddings.append(result.embeddings[0].values)
