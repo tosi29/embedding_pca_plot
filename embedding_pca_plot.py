@@ -7,8 +7,7 @@ import os
 import time
 
 # APIキーを設定
-GOOGLE_API_KEY = os.environ.get('GEMINI_API_KEY')
-client = genai.Client(api_key=GOOGLE_API_KEY)
+client = genai.Client(api_key=os.environ.get('GEMINI_API_KEY'))
 
 # input.txtからテキストを読み込み
 with open("input.txt", "r") as f:
