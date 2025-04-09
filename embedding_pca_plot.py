@@ -3,6 +3,7 @@ import plotly.express as px
 from sklearn.decomposition import PCA
 import numpy as np
 import os
+import time
 
 # APIキーを設定
 GOOGLE_API_KEY = os.environ.get('GEMINI_API_KEY')
@@ -20,7 +21,7 @@ for text in texts:
             model="gemini-embedding-exp-03-07",
             contents=text,
         )
-        print(result)
+        time.sleep(10) # APIのレート制限を避けるために10秒待機
         embeddings.append(result.embeddings[0].values)
 
 # PCAで2次元に次元削減
