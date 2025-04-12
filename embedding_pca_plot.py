@@ -3,6 +3,7 @@ import argparse
 import json
 import os
 import time
+import textwrap
 from pathlib import Path
 import numpy as np
 import plotly.express as px
@@ -33,6 +34,14 @@ def get_embedding(client, text):
 def is_valid_embedding(embedding):
     """Checks if the provided embedding is a list of numbers."""
     return isinstance(embedding, list) and all(isinstance(n, (int, float)) for n in embedding)
+
+def wrap_text(text, width=40):
+    """Wraps text to a specified width, replacing newlines with <br>."""
+    if not text: # Handle empty or None text
+        return ""
+    # Use textwrap.fill which handles existing newlines properly
+    # Replace the generated newlines with <br> for HTML display
+    return textwrap.fill(text, width=width).replace('\n', '<br>')
 
 # --- Main Logic ---
 def main():
@@ -111,9 +120,12 @@ def main():
             for text in raw_texts:
                 embedding = get_embedding(client, text)
                 if embedding:
-                    texts.append(text)
+                    # Wrap text before appending
+                    wrapped_text = wrap_text(text)
+                    texts.append(wrapped_text)
                     embeddings.append(embedding)
                     labels.append(TEXT_FILE_LABEL) # Use a default label for txt files
+                    details_texts.append("") # Add empty string for details in txt files
 
         elif file_extension == ".json":
             with open(input_path, "r", encoding="utf-8") as f:
@@ -151,9 +163,13 @@ def main():
                     print(f"Warning: Details field '{args.json_details_field}' for '{text[:30]}...' is not a string. Using empty string.")
                     details = ""
 
-                texts.append(text)
+                # Wrap text and details before appending
+                wrapped_text = wrap_text(text)
+                wrapped_details = wrap_text(details)
+
+                texts.append(wrapped_text)
                 labels.append(label)
-                details_texts.append(details) # Append details text
+                details_texts.append(wrapped_details) # Append wrapped details text
 
         else:
             print(f"Error: Unsupported file extension '{file_extension}'. Please use .txt or .json.")
@@ -196,12 +212,19 @@ def main():
             x=pca_result[:, 0],
             y=pca_result[:, 1],
             color=labels,          # Use labels for color coding
-            hover_name=texts,      # Show main text on hover
-            hover_data={'Details': details_texts}, # Show supplementary details
+            # hover_name=texts,      # Replaced by custom_data and hovertemplate
+            # hover_data={'Details': details_texts}, # Replaced by custom_data and hovertemplate
+            custom_data=[texts, details_texts], # Pass lists directly for custom data
             title=f'PCA of Embeddings from {input_path.name}',
             labels={'x': 'PCA Component 1', 'y': 'PCA Component 2', 'color': 'Label'}
         )
-        # fig.update_traces(textposition='top center') # Not needed for hover info
+        # Define the hover template (no max-width needed as text is pre-wrapped)
+        hovertemplate = (
+            f"<b>{args.json_text_field}:</b><br>" "%{customdata[0]}<br><br>"
+            f"<b>{args.json_details_field}:</b><br>" "%{customdata[1]}"
+            "<extra></extra>" # Hide the trace info
+        )
+        fig.update_traces(hovertemplate=hovertemplate)
     except Exception as e:
         print(f"Error during plot generation: {e}")
         exit(1)
