@@ -63,6 +63,12 @@ def main():
         help="Name of the field containing the label in the JSON input (default: label)"
     )
     parser.add_argument(
+        "--json-details-field",
+        type=str,
+        default="details",
+        help="Name of the field containing supplementary details in the JSON input (default: details)"
+    )
+    parser.add_argument(
         "-o", "--output",
         type=Path,
         help="Path to the output HTML file (default: derived from input filename)"
@@ -87,6 +93,7 @@ def main():
     texts = []
     embeddings = []
     labels = []
+    details_texts = [] # Initialize list for details
 
     # 5. Read and Process Input File
     print(f"Processing input file: {input_path}")
@@ -139,8 +146,14 @@ def main():
                         continue
                     embeddings.append(embedding)
 
+                details = item.get(args.json_details_field, "")
+                if not isinstance(details, str):
+                    print(f"Warning: Details field '{args.json_details_field}' for '{text[:30]}...' is not a string. Using empty string.")
+                    details = ""
+
                 texts.append(text)
                 labels.append(label)
+                details_texts.append(details) # Append details text
 
         else:
             print(f"Error: Unsupported file extension '{file_extension}'. Please use .txt or .json.")
@@ -183,11 +196,12 @@ def main():
             x=pca_result[:, 0],
             y=pca_result[:, 1],
             color=labels,          # Use labels for color coding
-            hover_name=texts,      # Show text on hover
+            hover_name=texts,      # Show main text on hover
+            hover_data={'Details': details_texts}, # Show supplementary details
             title=f'PCA of Embeddings from {input_path.name}',
             labels={'x': 'PCA Component 1', 'y': 'PCA Component 2', 'color': 'Label'}
         )
-        fig.update_traces(textposition='top center') # Although hover_name is used, this doesn't hurt
+        # fig.update_traces(textposition='top center') # Not needed for hover info
     except Exception as e:
         print(f"Error during plot generation: {e}")
         exit(1)
