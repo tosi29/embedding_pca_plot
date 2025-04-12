@@ -8,6 +8,9 @@ google-genai = "*"
 plotly = "*"
 scikit-learn = "*"
 pandas = "*"
+umap-learn = "*"
+hdbscan = "*"
+bertopic = "*"
 
 [dev-packages]
 
