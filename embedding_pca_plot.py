@@ -145,7 +145,10 @@ def main():
                     continue
 
                 embedding = item.get(args.json_embedding_field)
-                label = item.get(args.json_label_field, DEFAULT_LABEL) # Use default if label is missing
+                label = item.get(args.json_label_field, DEFAULT_LABEL) # Get label or default
+                # Ensure label is a string, even if the field value was null/None
+                if label is None:
+                    label = DEFAULT_LABEL
 
                 if embedding and is_valid_embedding(embedding):
                     print(f"Using provided embedding for '{text[:30]}...'")
@@ -205,23 +208,42 @@ def main():
         print(f"Error during PCA: {e}")
         exit(1)
 
-    # 8. Generate Plot
+    # 8. Prepare Data for Plotting (Sort by Label for Legend Order)
+    print("Preparing data for plotting (sorting by label)...")
+    # Combine all data points into a list of tuples
+    plot_data = list(zip(
+        pca_result[:, 0],
+        pca_result[:, 1],
+        labels,
+        texts,
+        details_texts
+    ))
+    # Sort the data based on the label (3rd element, index 2)
+    plot_data_sorted = sorted(plot_data, key=lambda item: item[2])
+
+    # Unzip the sorted data back into separate lists/arrays
+    sorted_x = [item[0] for item in plot_data_sorted]
+    sorted_y = [item[1] for item in plot_data_sorted]
+    sorted_labels = [item[2] for item in plot_data_sorted]
+    sorted_texts = [item[3] for item in plot_data_sorted]
+    sorted_details = [item[4] for item in plot_data_sorted]
+
+    # 9. Generate Plot with Sorted Data
     print("Generating plot...")
     try:
         fig = px.scatter(
-            x=pca_result[:, 0],
-            y=pca_result[:, 1],
-            color=labels,          # Use labels for color coding
-            # hover_name=texts,      # Replaced by custom_data and hovertemplate
-            # hover_data={'Details': details_texts}, # Replaced by custom_data and hovertemplate
-            custom_data=[texts, details_texts], # Pass lists directly for custom data
+            x=sorted_x,
+            y=sorted_y,
+            color=sorted_labels,   # Use sorted labels for color coding and legend order
+            custom_data=[sorted_texts, sorted_details, sorted_labels], # Pass sorted custom data
             title=f'PCA of Embeddings from {input_path.name}',
             labels={'x': 'PCA Component 1', 'y': 'PCA Component 2', 'color': 'Label'}
         )
         # Define the hover template (no max-width needed as text is pre-wrapped)
         hovertemplate = (
             f"<b>{args.json_text_field}:</b><br>" "%{customdata[0]}<br><br>"
-            f"<b>{args.json_details_field}:</b><br>" "%{customdata[1]}"
+            f"<b>{args.json_details_field}:</b><br>" "%{customdata[1]}<br><br>"
+            f"<b>{args.json_label_field}:</b> " "%{customdata[2]}<br>"
             "<extra></extra>" # Hide the trace info
         )
         fig.update_traces(hovertemplate=hovertemplate)
@@ -229,10 +251,10 @@ def main():
         print(f"Error during plot generation: {e}")
         exit(1)
 
-    # 9. Save Plot
+    # 10. Save Plot
     print(f"Saving plot to: {output_path}")
     try:
-        fig.write_html(output_path)
+        fig.write_html(output_path, include_plotlyjs='cdn' )
         print("Plot saved successfully.")
     except Exception as e:
         print(f"Error saving plot to HTML: {e}")
