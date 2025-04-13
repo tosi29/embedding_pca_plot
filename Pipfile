@@ -11,6 +11,11 @@ pandas = "*"
 umap-learn = "*"
 hdbscan = "*"
 bertopic = "*"
+sentence-transformers = "*"
+mecab-python3 = "*"
+ipadic = "*"
+fugashi = "*"
+unidic-lite = "*"
 
 [dev-packages]
 
