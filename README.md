@@ -116,5 +116,5 @@ pipenv run python embedding_clustering_plot.py -i abduction_embeddings.json
 
 テキストやフィールドを指定する場合
 ```bash
-pipenv run python embedding_clustering_plot.py -i abduction_embeddings.json --json-embedding-field hypothesis_embedding --json-text-field hypothesis --json-details-field fact_episode
+pipenv run python embedding_clustering_plot.py -i abduction_embeddings.json --json-embedding-field hypothesis_embedding --json-text-field hypothesis --json-details-field fact_episode --json-label-field series
 ```
