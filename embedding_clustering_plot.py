@@ -170,6 +170,47 @@ def get_topic_display_name(topic_id):
     else:
         return f"Topic {topic_id}: 未分類"
 
+def generate_markdown_table(table_data):
+    """Generate a Markdown table from the topic analysis results."""
+    if not table_data:
+        return "No data available for table generation."
+    
+    # Group data by series
+    series_groups = {}
+    for item in table_data:
+        series = item['series']
+        # Handle None values
+        if series is None:
+            series = "未分類"
+        if series not in series_groups:
+            series_groups[series] = []
+        series_groups[series].append(item)
+    
+    # Generate markdown table
+    markdown = "# トピック分析結果\n\n"
+    markdown += "| シリーズ | トピック | 仮説 | 事実 |\n"
+    markdown += "|---------|---------|------|------|\n"
+    
+    # Sort series for consistent output (filter out None values)
+    series_keys = [k for k in series_groups.keys() if k is not None]
+    for series in sorted(series_keys):
+        items = series_groups[series]
+        # Sort items within series by topic
+        items.sort(key=lambda x: x['topic'])
+        
+        for i, item in enumerate(items):
+            # Show series name for all items
+            series_cell = series
+            
+            # Clean and format text for markdown table
+            topic = str(item['topic']).replace('|', '\\|').replace('\n', ' ')
+            hypothesis = str(item['hypothesis']).replace('|', '\\|').replace('\n', ' ')
+            fact = str(item['fact']).replace('|', '\\|').replace('\n', ' ')
+            
+            markdown += f"| {series_cell} | {topic} | {hypothesis} | {fact} |\n"
+    
+    return markdown
+
 # --- Main Logic ---
 def main():
     # 1. Setup Argument Parser
@@ -209,6 +250,11 @@ def main():
         type=Path,
         help="Path to the output HTML file (default: derived from input filename)"
     )
+    parser.add_argument(
+        "--generate-table",
+        action="store_true",
+        help="Generate a Markdown table with series, topics, hypothesis, and facts"
+    )
     args = parser.parse_args()
 
     input_path = args.input
@@ -232,6 +278,7 @@ def main():
     labels = []
     details_texts = []
     original_texts = [] # Store original, unwrapped text for BERTopic
+    original_items = [] # Store original JSON items for table generation
 
     # 5. Read and Process Input File
     print(f"Processing input file: {input_path}")
@@ -250,6 +297,12 @@ def main():
                 embedding = get_embedding(client, text)
                 if embedding:
                     original_texts.append(text) # Store original text
+                    # For txt files, create a dummy item structure
+                    original_items.append({
+                        args.json_text_field: text,
+                        args.json_label_field: TEXT_FILE_LABEL,
+                        args.json_details_field: ""
+                    })
                     wrapped_text = wrap_text(text) # Wrap for hover
                     texts.append(wrapped_text)
                     embeddings.append(embedding)
@@ -296,6 +349,7 @@ def main():
                     details = ""
 
                 original_texts.append(text) # Store original text
+                original_items.append(item) # Store original JSON item
                 wrapped_text = wrap_text(text) # Wrap for hover
                 wrapped_details = wrap_text(details) # Wrap for hover
 
@@ -460,6 +514,43 @@ def main():
     except Exception as e:
         print(f"Error saving plot to HTML: {e}")
         exit(1)
+
+    # 12. Generate Markdown Table if requested
+    if args.generate_table:
+        print("Generating Markdown table...")
+        try:
+            # Combine topic results with original data
+            table_data = []
+            for i, (topic_id, original_item) in enumerate(zip(topic_ids, original_items)):
+                # Get the topic display name
+                topic_display = get_topic_display_name(topic_id)
+                
+                # Extract data from original item using field names from args
+                series = original_item.get(args.json_label_field, "N/A")  # series is stored as label
+                hypothesis = original_item.get(args.json_text_field, "N/A")  # hypothesis is stored as text
+                fact = original_item.get(args.json_details_field, "N/A")  # fact is stored as details
+                
+                table_data.append({
+                    'series': series,
+                    'topic': topic_display,
+                    'hypothesis': hypothesis,
+                    'fact': fact
+                })
+            
+            # Group by series and generate markdown table
+            markdown_table = generate_markdown_table(table_data)
+            
+            # Save markdown table to file
+            table_output_path = output_path.with_name(f"{output_path.stem}_table.md")
+            with open(table_output_path, "w", encoding="utf-8") as f:
+                f.write(markdown_table)
+            
+            print(f"Markdown table saved to: {table_output_path}")
+            
+        except Exception as e:
+            print(f"Error generating markdown table: {e}")
+            import traceback
+            traceback.print_exc()
 
 if __name__ == "__main__":
     main()
