@@ -20,6 +20,120 @@ DEFAULT_LABEL = "unknown"
 TEXT_FILE_LABEL = "text_file_data"
 BERTOPIC_OUTLIER_LABEL = "Outliers -1" # Label for BERTopic outliers
 
+# --- Topic Name Mapping ---
+# トピック名をカスタムしたい場合は手動で定義する
+TOPIC_NAME_MAPPING = {
+    0: "危機下のリーダーシップ",
+    1: "ジェンダー観と社会的構築",
+    2: "歴史解釈と価値観の形成",
+    3: "競争における戦略と戦術",
+    4: "技術革新と社会・権力構造の変化",
+    5: "教育・組織による知識と文化の継承",
+    6: "失敗の構造と過信のリスク",
+    7: "目標達成のための長期的努力と精神力",
+    8: "組織・国家の変革と環境適応",
+    9: "国際関係と安全保障のジレンマ",
+    10: "民主主義の課題と権威主義",
+    11: "統治システム：中央集権と地方分権",
+    12: "国民・民族アイデンティティの形成と排他性",
+    13: "社会問題と福祉国家の役割",
+    14: "権力闘争と維持のための非情な手段",
+    15: "人間の認識と信念の枠組み",
+    16: "極限状況における非人間性と悲劇",
+    17: "外部の脅威と組織の結束・崩壊",
+    18: "思想・理想と政治的現実",
+    19: "権威の源泉（伝統・武力・経済力など）",
+    20: "社会改革の困難性と「Jカーブ効果」",
+    21: "内部対立による組織の脆弱化",
+    22: "時代を先取りする革新と再評価",
+    23: "実力・経済力による影響力の獲得",
+    24: "文脈依存的な評価と意味の相対性",
+    25: "情報伝達技術と社会・権威の変革",
+    26: "大規模変動（環境・社会）の複雑性と予期せぬ影響",
+    27: "物語（ナラティブ）と象徴の政治的利用",
+    28: "統治の理念（権力分立・一般意思）",
+    29: "無限成長パラダイムへの批判と持続可能性",
+    30: "抽象概念とシンボルの文化的発展",
+    31: "承認の欠如と人格形成への影響",
+    32: "文化の融合（シンクレティズム）と変容",
+    33: "社会的危機と権威主義への傾倒",
+    34: "外部リソースの活用と組織の発展",
+    35: "効果的な学習と複雑な文脈の重要性",
+    36: "リーダーへの依存と後継者問題のリスク",
+    37: "使命感に基づく改革運動と対抗勢力",
+    38: "科学の権威と差別の正当化",
+    39: "可能性の認識と挑戦を促す心理",
+    40: "常識と価値観の歴史的・社会的相対性",
+    41: "後継者問題と組織内の権力闘争",
+    42: "障害の社会モデルと生産性",
+    43: "社会変動期における権威と価値観の転換",
+    44: "辺境における独自の価値観の形成",
+    45: "逆境が促す成長と飛躍",
+    46: "軍事的成功体験と過信のリスク",
+    47: "強い信念と目標達成の力",
+    48: "目標達成のためのリソースと協力体制",
+    49: "経済活動におけるコストと価値の交換",
+    50: "イノベーションの実践と現実的要因",
+    51: "プロパガンダと信頼性の失墜",
+    52: "交渉における原則と現実的対応",
+    53: "統治の空白と非公式な権力構造",
+    54: "過酷な環境が育む強靭な精神性",
+    55: "複雑性の理解と多角的視点（メタ認知）",
+    56: "非暴力・不服従による抵抗",
+    57: "社会秩序と「世間」の圧力",
+    58: "内発的動機と自己の探求",
+    59: "精神的・経済的支援とコラボレーション",
+    60: "執着からの解放と精神的自由",
+    61: "メディアによる大衆操作とプロパガンダ",
+    62: "長期戦におけるソフトパワーと戦略",
+    63: "スケープゴートとしてのマイノリティ",
+    64: "貨幣と信用のシステム",
+    65: "分断統治と内部対立の助長",
+    66: "希少資源をめぐる競争とリーダーシップ",
+    67: "信頼の重要性と裏切りの代償",
+    68: "ルールと規範の役割",
+    69: "危機的状況下における利他行動と共感",
+    70: "長期的視点を持つ企業の社会貢献",
+    71: "権力者の言動と社会的反発",
+    72: "異文化体験と自己の相対化",
+    73: "社会構造とルール（ロシア語キーワード）",
+    74: "複雑な課題への戦略的アプローチ",
+    75: "年齢による社会的役割と標準化",
+    76: "社会変化における意識と制度のズレ",
+    77: "思想・宗教の普及と実践",
+    78: "抽象概念の具現化とデザインの力",
+    79: "メディアの選択と情報ニーズ",
+    80: "大国間の誤解と意図しない対立激化",
+    81: "多様な社会の統治と共通理念",
+    82: "豊かさの中の精神的葛藤と自由への希求",
+    83: "理想の裏の現実政治（Realpolitik）",
+    84: "実務経験を通じた本質的理解",
+    85: "リーダーシップと組織的基盤",
+    86: "内部結束の欠如と作戦の失敗",
+    87: "利害に基づく戦略的同盟関係",
+    88: "ネガティブな感情の創造的昇華",
+    89: "非人間化のプロセスと共感の欠如",
+    90: "属人的支配からシステムによる統治へ",
+    91: "無償の行為（利他主義）の価値",
+    92: "圧倒的成果による規則違反の正当化",
+    93: "社会・文化の基底にある構造",
+    94: "征服・統合における文化の強制と反発",
+    95: "実力主義と社会階層の流動性",
+    96: "直感的・体験的学習の重要性",
+    97: "政治的枠組みによる人道的危機の助長",
+    98: "システム内での戦略的立ち回り",
+    99: "主流思想の空白と代替的価値観の興隆",
+    100: "禁止される行為の地下化・制度化",
+    101: "対立概念の統合と発展（止揚）",
+    102: "欠乏感が煽る情熱と承認欲求",
+    103: "社会規範からの逸脱と新たな価値の創造",
+    104: "社会問題の認識と公的介入の正当化",
+    105: "段階的な社会変革のプロセス",
+    106: "組織における構造的なスケープゴート",
+    107: "イデオロギーによる現実解釈と意味付け",
+    -1: "その他・外れ値"
+}
+
 # --- Helper Functions ---
 def get_embedding(client, text):
     """Generates embedding for a given text using the Gemini API."""
@@ -46,6 +160,15 @@ def wrap_text(text, width=40):
     # Use textwrap.fill which handles existing newlines properly
     # Replace the generated newlines with <br> for HTML display
     return textwrap.fill(text, width=width).replace('\n', '<br>')
+
+def get_topic_display_name(topic_id):
+    """Get display name for topic using manual mapping or default format."""
+    if topic_id in TOPIC_NAME_MAPPING:
+        return f"Topic {topic_id}: {TOPIC_NAME_MAPPING[topic_id]}"
+    elif topic_id == -1:
+        return BERTOPIC_OUTLIER_LABEL
+    else:
+        return f"Topic {topic_id}: 未分類"
 
 # --- Main Logic ---
 def main():
@@ -228,8 +351,8 @@ def main():
         # Fit BERTopic model using original texts and pre-calculated embeddings
         topic_ids, _ = topic_model.fit_transform(original_texts, embeddings=embeddings_array)
 
-        # Convert integer topic IDs to string labels for plotting
-        bertopic_labels_str = [f"Topic {label}" if label != -1 else BERTOPIC_OUTLIER_LABEL for label in topic_ids]
+        # Convert integer topic IDs to string labels for plotting using manual mapping
+        bertopic_labels_str = [get_topic_display_name(label) for label in topic_ids]
         num_topics = len(set(topic_ids)) - (1 if -1 in topic_ids else 0)
         num_noise = np.sum(np.array(topic_ids) == -1)
         print(f"BERTopic found {num_topics} topics and {num_noise} outliers.")
@@ -262,18 +385,49 @@ def main():
         exit(1)
 
 
-    # 9. Prepare Data for Plotting
-    print("Preparing data for plotting...")
-    # Data is aligned: umap_plot_result, bertopic_labels_str, labels (original), texts (wrapped), details_texts
+    # 9. Prepare Data for Plotting (Sort by Topic Name for Legend Order)
+    print("Preparing data for plotting (sorting by topic name)...")
+    # Combine all data points into a list of tuples
+    plot_data = list(zip(
+        umap_plot_result[:, 0],
+        umap_plot_result[:, 1],
+        bertopic_labels_str,
+        texts,
+        details_texts,
+        labels
+    ))
+    # Sort the data based on the topic ID (extracted from topic name)
+    def get_topic_sort_key(topic_name):
+        if "Topic -1:" in topic_name or "Outliers" in topic_name:
+            return -1  # Outliers first
+        elif "Topic " in topic_name:
+            # Extract topic number from "Topic X: ..."
+            try:
+                topic_num = int(topic_name.split(":")[0].replace("Topic ", ""))
+                return topic_num
+            except ValueError:
+                return 9999  # Unknown format goes to end
+        else:
+            return 9999  # Unknown format goes to end
+    
+    plot_data_sorted = sorted(plot_data, key=lambda item: get_topic_sort_key(item[2]))
+
+    # Unzip the sorted data back into separate lists/arrays
+    sorted_x = [item[0] for item in plot_data_sorted]
+    sorted_y = [item[1] for item in plot_data_sorted]
+    sorted_topic_labels = [item[2] for item in plot_data_sorted]
+    sorted_texts = [item[3] for item in plot_data_sorted]
+    sorted_details = [item[4] for item in plot_data_sorted]
+    sorted_original_labels = [item[5] for item in plot_data_sorted]
 
     # 10. Generate Plot with UMAP results and BERTopic labels
     print("Generating plot...")
     try:
         fig = px.scatter(
-            x=umap_plot_result[:, 0],
-            y=umap_plot_result[:, 1],
-            color=bertopic_labels_str, # Color by BERTopic label
-            custom_data=[texts, details_texts, labels, bertopic_labels_str], # Add BERTopic label to custom data
+            x=sorted_x,
+            y=sorted_y,
+            color=sorted_topic_labels, # Color by sorted BERTopic label
+            custom_data=[sorted_texts, sorted_details, sorted_original_labels, sorted_topic_labels], # Use sorted custom data
             title=f'BERTopic Clustering (Visualized with UMAP) from {input_path.name}', # Updated title
             labels={'x': 'UMAP 1', 'y': 'UMAP 2', 'color': 'BERTopic Topic'} # Updated labels
         )
