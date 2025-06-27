@@ -218,8 +218,19 @@ def main():
         texts,
         details_texts
     ))
-    # Sort the data based on the label (3rd element, index 2)
-    plot_data_sorted = sorted(plot_data, key=lambda item: item[2])
+    # Sort the data based on the label with proper numeric ordering
+    def get_label_sort_key(label):
+        if label and label[0].isdigit():
+            # Handle "1.吉田松陰" format - extract number before the dot
+            try:
+                topic_num = int(label.split(".")[0])
+                return (0, topic_num)  # (type, number) for numeric labels
+            except ValueError:
+                return (1, label)  # (type, string) for non-numeric labels
+        else:
+            return (1, label)  # (type, string) for non-numeric labels
+    
+    plot_data_sorted = sorted(plot_data, key=lambda item: get_label_sort_key(item[2]))
 
     # Unzip the sorted data back into separate lists/arrays
     sorted_x = [item[0] for item in plot_data_sorted]
