@@ -221,6 +221,7 @@ def main():
             umap_model=umap_model_bt,
             hdbscan_model=hdbscan_model_bt,
             embedding_model=None, # We provide pre-computed embeddings
+            language="japanese", # Set language for proper tokenization
             verbose=True
         )
 
