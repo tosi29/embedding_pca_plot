@@ -70,3 +70,4 @@ pipenv run python embedding_pca_plot.py -i sample.json -o sample_pca_output.html
 **例 (クラスタリング):**
 ```bash
 pipenv run python embedding_clustering_plot.py -i abduction_embeddings.json
+```
