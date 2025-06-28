@@ -11,44 +11,6 @@
     *   UMAP (Uniform Manifold Approximation and Projection) とBERTopicを組み合わせたクラスタリング
 *   Plotly Expressを使用してインタラクティブなHTMLプロットを作成し、ホバー時にテキスト、詳細、ラベル/トピックを表示します。
 
-```mermaid
-flowchart TD
-    %% 外部エンティティ（四角）
-    A1[書き起こしテキスト] --> P1(仮説抽出<br/>by Gemini 2.5 Pro)
-    
-    %% データストア（平行線）
-    P1 --> D1[/仮説（テキスト）/]
-    D1 --> P2(ベクトル化<br/>by Gemini Embedding)
-    P2 --> D2[/仮説（テキスト＋ベクトル）/]
-    
-    %% プロセス（角丸矩形）
-    D2 --> P3(主成分分析)
-    D2 --> P4(クラスタリング)
-    
-    %% 中間データストア
-    P3 --> D3[/第1主成分・第2主成分/]
-    P4 --> D4[/トピック/]
-    
-    %% 可視化プロセス
-    D3 --> P5(グラフ化)
-    D2 --> P5
-    D4 --> P6(グラフ化)
-    D2 --> P6
-    
-    %% 最終出力（外部エンティティ）
-    P5 --> E1[主成分分析<br/>グラフ]
-    P6 --> E2[クラスタ<br/>グラフ]
-    
-    %% スタイリング
-    classDef external fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#000
-    classDef process fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-    classDef datastore fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#000
-
-    class A1,E1,E2 external
-    class P1,P2,P3,P4,P5,P6 process
-    class D1,D2,D3,D4 datastore
-```
-
 ## スクリプト
 
 ### 1. `embedding_pca_plot.py`
